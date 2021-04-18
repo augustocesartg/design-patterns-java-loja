@@ -1,25 +1,28 @@
 package br.com.augustogiacomini.loja.orcamento;
 
 import br.com.augustogiacomini.loja.orcamento.situacao.EmAnalise;
+import br.com.augustogiacomini.loja.orcamento.situacao.Finalizado;
 import br.com.augustogiacomini.loja.orcamento.situacao.SituacaoOrcamento;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utilizado Padrão State - para para evitar vários if's no cálculo do desconto extra.
  */
-public class Orcamento {
+public class Orcamento implements Orcavel {
 
     private BigDecimal valor;
 
-    private int qtItens;
-
     private SituacaoOrcamento situacao;
 
-    public Orcamento(BigDecimal valor, int qtItens) {
-        this.valor = valor;
-        this.qtItens = qtItens;
+    private List<Orcavel> itens;
+
+    public Orcamento() {
+        this.valor = BigDecimal.ZERO;
         this.situacao = new EmAnalise();
+        this.itens = new ArrayList<>();
     }
 
     public void aplicarDescontoExtra() {
@@ -39,12 +42,19 @@ public class Orcamento {
         this.situacao.finalizar(this);
     }
 
+    @Override
     public BigDecimal getValor() {
-        return valor;
+        // Thread sleep adicionado para testar proxy (cache)
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return this.valor;
     }
 
     public int getQtItens() {
-        return qtItens;
+        return itens.size();
     }
 
     public SituacaoOrcamento getSituacao() {
@@ -53,5 +63,14 @@ public class Orcamento {
 
     public void setSituacao(SituacaoOrcamento situacao) {
         this.situacao = situacao;
+    }
+
+    public boolean isFinalizado() {
+        return situacao instanceof Finalizado;
+    }
+
+    public void adicionarItem(Orcavel item) {
+        this.valor = valor.add(item.getValor());
+        this.itens.add(item);
     }
 }

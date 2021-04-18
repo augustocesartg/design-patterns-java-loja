@@ -2,16 +2,29 @@ package br.com.augustogiacomini.loja;
 
 import br.com.augustogiacomini.loja.desconto.CalculadoraDesconto;
 import br.com.augustogiacomini.loja.orcamento.Orcamento;
+import br.com.augustogiacomini.loja.orcamento.OrcamentoItem;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
+/**
+ * Chain of Responsability, State, Template Method
+ */
 public class TesteDescontos {
 
     public static void main(String[] args) {
-        Orcamento descontoPorQuantidadeItens = new Orcamento(new BigDecimal("200"), 6);
-        Orcamento descontoPorValor = new Orcamento(new BigDecimal("1000"), 1);
-        Orcamento descontoExtraEmAnalise = new Orcamento(new BigDecimal("1000"), 1);
-        Orcamento descontoExtraAprovado = new Orcamento(new BigDecimal("1000"), 1);
+        Orcamento descontoPorQuantidadeItens = new Orcamento();
+        Orcamento descontoPorValor = new Orcamento();
+        Orcamento descontoExtraEmAnalise = new Orcamento();
+        Orcamento descontoExtraAprovado = new Orcamento();
+
+        OrcamentoItem item1 = new OrcamentoItem(new BigDecimal("200"));
+        Arrays.asList(item1, item1, item1, item1, item1, item1).forEach(item -> descontoPorQuantidadeItens.adicionarItem(item));
+
+        OrcamentoItem item2 = new OrcamentoItem(new BigDecimal("1000"));
+        descontoPorValor.adicionarItem(item2);
+        descontoExtraEmAnalise.adicionarItem(item2);
+        descontoExtraAprovado.adicionarItem(item2);
 
         CalculadoraDesconto calculadoraDesconto = new CalculadoraDesconto();
 
