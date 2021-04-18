@@ -6,3 +6,8 @@ Design Patterns em Java
 - State;
 - Command;
 - Observer;
+- Adapter;
+- Decorator;
+- Composite;
+- Facade;
+- Proxy (Cache);
